@@ -7,8 +7,7 @@ export const signupSchema = Joi.object({
 })
 
 export const verifyEmailSchema = Joi.object({
-    email: Joi.string().trim().lowercase().email().required(),
-    verificationCode: Joi.string().required(),
+    verificationCode: Joi.string().required().length(6),
 })
 
 export const signinSchema = Joi.object({

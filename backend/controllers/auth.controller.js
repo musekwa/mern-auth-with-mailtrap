@@ -61,7 +61,7 @@ export const forgotPassword = async (req, res)=>{
         existingUser.resetPasswordCode = resetPasswordCode
         existingUser.resetPasswordCodeExpiresAt = resetPasswordCodeExpiresAt
         await existingUser.save()
-        await sendResetPasswordCodeEmail(existingUser.email, `${process.env.CLIENT_URL}/reset-password?code=${resetPasswordCode}`)
+        await sendResetPasswordCodeEmail(existingUser.email, `${process.env.CLIENT_URL}/reset-password/${resetPasswordCode}`)
         res.status(200).json({success:true,message:"Reset password code sent to email"})
         
     }
@@ -72,15 +72,19 @@ export const forgotPassword = async (req, res)=>{
 }
 
 export const verifyEmail = async (req, res) => {
-    const { email, verificationCode } = req.body
+    const { verificationCode } = req.body
     try {
         const { error } = verifyEmailSchema.validate(req.body)
         if (error) {
             return res.status(400).json({ success: false, message: error.details[0].message })
         }
-        const existingUser = await User.findOne({ email })
+        const hmacVerificationCode = await hmacProcess(verificationCode, process.env.HMAC_SECRET_KEY)
+        const existingUser = await User.findOne({
+            verificationCode: hmacVerificationCode,
+            verificationCodeExpiresAt: { $gt: Date.now() },
+        })
         if (!existingUser) {
-            return res.status(404).json({ success: false, message: "User not found" })
+            return res.status(404).json({ success: false, message: "Invalid or expired verification code" })
         }
         const isVerified = await hmacCompare(verificationCode, existingUser.verificationCode, process.env.HMAC_SECRET_KEY)
         // Check if verification code is invalid or expired
