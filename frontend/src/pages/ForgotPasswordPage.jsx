@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { useAuthStore } from "../authStore";
+import { useAuthStore } from "../store/authStore";
 import Input from "../components/Input";
 import { Mail, Loader, ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -14,7 +14,6 @@ const ForgotPasswordPage = () => {
     e.preventDefault();
     await forgotPassword(email);
     setIsSubmitted(true);
-    
   };
   return (
     <motion.div

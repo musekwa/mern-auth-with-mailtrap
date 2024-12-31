@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { useParams, useNavigate } from "react-router-dom";
-import { useAuthStore } from "../authStore";
+import { useAuthStore } from "../store/authStore";
 import Input from "../components/Input";
 import { Loader, Lock } from "lucide-react";
 import toast from "react-hot-toast";
@@ -21,7 +21,9 @@ const ResetPasswordPage = () => {
     }
     try {
       await resetPassword(password, token);
-      toast.success("Password reset successfully, redirecting to login page...");
+      toast.success(
+        "Password reset successfully, redirecting to login page..."
+      );
       setTimeout(() => {
         navigate("/login");
       }, 2000);
@@ -45,7 +47,10 @@ const ResetPasswordPage = () => {
       {error && <p className="text-red-500 text-sm">{error}</p>}
       {message && <p className="text-green-500 text-sm">{message}</p>}
 
-      <form onSubmit={handleSubmit} className="flex flex-col p-8 justify-center">
+      <form
+        onSubmit={handleSubmit}
+        className="flex flex-col p-8 justify-center"
+      >
         <Input
           icon={Lock}
           type="password"

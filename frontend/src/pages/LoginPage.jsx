@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Mail, Lock, Loader } from "lucide-react";
 import { Link } from "react-router-dom";
 import Input from "../components/Input";
-import { useAuthStore } from "../authStore";
+import { useAuthStore } from "../store/authStore";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -42,8 +42,13 @@ const LoginPage = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
 
-          <div className="flex justify-between items-center mb-6">   
-            <Link to="/forgot-password" className="text-green-400 hover:text-emerald-600 hover:underline">Forgot Password?</Link>
+          <div className="flex justify-between items-center mb-6">
+            <Link
+              to="/forgot-password"
+              className="text-green-400 hover:text-emerald-600 hover:underline"
+            >
+              Forgot Password?
+            </Link>
           </div>
 
           {error && <p className="text-red-500 text-center mb-4">{error}</p>}
@@ -59,13 +64,23 @@ const LoginPage = () => {
             type="submit"
             disabled={isLoading}
           >
-            {isLoading ? <Loader className="animate-spin size-6 mx-auto" /> : "Login"}
+            {isLoading ? (
+              <Loader className="animate-spin size-6 mx-auto" />
+            ) : (
+              "Login"
+            )}
           </motion.button>
         </form>
       </div>
       <div className="p-8 py-4 bg-gray-900 bg-opacity-50 flex justify-center">
         <p className=" text-gray-400 text-sm ">
-            Don&apos;t have an account? <Link className="text-green-400 hover:text-emerald-600 hover:underline" to="/signup">Sign Up</Link>
+          Don&apos;t have an account?{" "}
+          <Link
+            className="text-green-400 hover:text-emerald-600 hover:underline"
+            to="/signup"
+          >
+            Sign Up
+          </Link>
         </p>
       </div>
     </motion.div>
